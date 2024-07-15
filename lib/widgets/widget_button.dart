@@ -9,12 +9,14 @@ class WidgetButton extends StatelessWidget {
     required this.onPressed,
     this.color,
     this.fullWidthButton,
+    this.type,
   }) : super(key: key);
 
   final String text;
   final Function() onPressed;
   final Color? color;
   final bool? fullWidthButton;
+  final GFButtonType? type;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class WidgetButton extends StatelessWidget {
       text: text,
       color: color ?? Theme.of(context).primaryColor,
       fullWidthButton: fullWidthButton,
+      type: type ?? GFButtonType.solid,
     );
   }
 }

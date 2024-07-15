@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/models/user_model.dart';
 import 'package:sinoproject/states/main_home.dart';
 import 'package:sinoproject/utility/app_controller.dart';
@@ -17,6 +18,29 @@ import 'package:sinoproject/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  Future<List<InsxModel>> readInsx() async {
+    var insxModels = <InsxModel>[];
+
+    var mapUser = await GetStorage().read('mapUserModel');
+    UserModel userModel = UserModel.fromMap(mapUser);
+
+    String urlAPI =
+        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
+
+    var result = await Dio().get(urlAPI);
+
+    if (result.toString() != 'null') {
+      for (var element in json.decode(result.data)) {
+        // print('element ---> $element');
+
+        InsxModel model = InsxModel.fromMap(element);
+        insxModels.add(model);
+      }
+    }
+
+    return insxModels;
+  }
 
   Future<void> processFindPosition() async {
     bool locationService = await Geolocator.isLocationServiceEnabled();

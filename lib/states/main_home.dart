@@ -1,10 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:sinoproject/states/authen.dart';
+
 import 'package:sinoproject/utility/app_controller.dart';
+import 'package:sinoproject/utility/app_dialog.dart';
 import 'package:sinoproject/utility/app_service.dart';
 import 'package:sinoproject/widgets/body_history.dart';
 import 'package:sinoproject/widgets/body_main.dart';
 import 'package:sinoproject/widgets/body_noti.dart';
+import 'package:sinoproject/widgets/widget_button.dart';
+import 'package:sinoproject/widgets/widget_menu.dart';
 
 class MainHome extends StatefulWidget {
   const MainHome({super.key});
@@ -59,6 +67,37 @@ class _MainHomeState extends State<MainHome> {
         return Scaffold(
           appBar: AppBar(
             title: Text(titles[appController.indexBody.value]),
+          ),
+          drawer: Drawer(
+            child: Column(
+              children: [
+                DrawerHeader(child: Text('data')),
+                const Spacer(),
+                WidgetMenu(
+                  title: 'Sign Out',
+                  iconData: Icons.exit_to_app,
+                  onTap: () {
+                    Get.back();
+
+                    AppDialog().normalDialog(
+                      title: 'Sign Out',
+                      contentWidget: const Text('Please Confirm for Sign Out'),
+                      firstWidget: WidgetButton(
+                        text: 'Confirm',
+                        onPressed: () async {
+                          await GetStorage().erase().then(
+                            (value) {
+                              Get.offAll(const Authen());
+                            },
+                          );
+                        },
+                        type: GFButtonType.outline2x,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           body: bodys[appController.indexBody.value],
           bottomNavigationBar: BottomNavigationBar(
