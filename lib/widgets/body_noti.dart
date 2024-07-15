@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 
 class BodyNoti extends StatefulWidget {
@@ -18,7 +19,14 @@ class _BodyNotiState extends State<BodyNoti> {
       builder: (AppController appController) {
         return appController.positions.isEmpty
             ? const SizedBox()
-            : Text(appController.positions.last.toString());
+            : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(appController.positions.last.latitude,
+                      appController.positions.last.longitude),
+                  zoom: 16,
+                ),
+                myLocationEnabled: true,
+              );
       },
     );
   }
