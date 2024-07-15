@@ -1,15 +1,74 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:sinoproject/models/user_model.dart';
 import 'package:sinoproject/states/main_home.dart';
+import 'package:sinoproject/utility/app_controller.dart';
+import 'package:sinoproject/utility/app_dialog.dart';
+import 'package:sinoproject/widgets/widget_button.dart';
 
 class AppService {
+  AppController appController = Get.put(AppController());
+
+  Future<void> processFindPosition() async {
+    bool locationService = await Geolocator.isLocationServiceEnabled();
+
+    if (locationService) {
+      //On Location
+
+      LocationPermission locationPermission =
+          await Geolocator.checkPermission();
+
+      if (locationPermission == LocationPermission.deniedForever) {
+        //ไม่อนุญาติเลย
+        dialogCallLocationPermission();
+      } else {
+        //Alway, WhileInUser, Denied
+        if (locationPermission == LocationPermission.denied) {
+          //ไม่รู้ว่าอนุญาติ หรือไม่
+
+          locationPermission = await Geolocator.requestPermission();
+
+          if ((locationPermission != LocationPermission.always) &&
+              (locationPermission != LocationPermission.whileInUse)) {
+            //Denies Forwer
+            dialogCallLocationPermission();
+          } else {
+            Position position = await Geolocator.getCurrentPosition();
+            appController.positions.add(position);
+          }
+        } else {
+          //Alway, WhileInUser
+          Position position = await Geolocator.getCurrentPosition();
+          appController.positions.add(position);
+        }
+      }
+    } else {
+      //Off Location
+      AppDialog().normalDialog(
+          title: 'Off Location Service',
+          contentWidget: const Text('Please Open Location Service'),
+          secondWidget: WidgetButton(
+            text: 'Open Service',
+            onPressed: () {
+              Geolocator.openLocationSettings().then(
+                (value) {
+                  exit(0);
+                },
+              );
+            },
+          ));
+    }
+  }
+
   Future<void> processCheckLogin({
     required String user,
     required String password,
@@ -50,6 +109,23 @@ class AppService {
           }
         }
       },
+    );
+  }
+
+  void dialogCallLocationPermission() {
+    AppDialog().normalDialog(
+      title: 'ไม่อนุญาติแชร์พิกัด',
+      contentWidget: const Text('Please Share Location'),
+      secondWidget: WidgetButton(
+        text: 'Share Locateion',
+        onPressed: () {
+          Geolocator.openAppSettings().then(
+            (value) {
+              exit(0);
+            },
+          );
+        },
+      ),
     );
   }
 }

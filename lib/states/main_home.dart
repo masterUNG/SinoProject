@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sinoproject/utility/app_controller.dart';
+import 'package:sinoproject/utility/app_service.dart';
 import 'package:sinoproject/widgets/body_history.dart';
 import 'package:sinoproject/widgets/body_main.dart';
 import 'package:sinoproject/widgets/body_noti.dart';
@@ -36,6 +37,8 @@ class _MainHomeState extends State<MainHome> {
   @override
   void initState() {
     super.initState();
+
+    AppService().processFindPosition();
 
     for (var i = 0; i < titles.length; i++) {
       items.add(
