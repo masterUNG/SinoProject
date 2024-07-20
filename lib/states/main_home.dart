@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/states/authen.dart';
 
 import 'package:sinoproject/utility/app_controller.dart';
@@ -42,12 +43,29 @@ class _MainHomeState extends State<MainHome> {
 
   List<BottomNavigationBarItem> items = [];
 
+  AppController appController = Get.put(AppController());
+
   @override
   void initState() {
     super.initState();
 
     AppService().processFindPosition();
+    createInsxModels();
+    createItems();
+  }
 
+  Future<void> createInsxModels() async {
+    var insxModels = <InsxModel>[];
+    insxModels = await AppService().readInsx();
+
+    if (insxModels.isNotEmpty) {
+      for (var element in insxModels) {
+        appController.insxModels.add(element);
+      }
+    }
+  }
+
+  void createItems() {
     for (var i = 0; i < titles.length; i++) {
       items.add(
         BottomNavigationBarItem(

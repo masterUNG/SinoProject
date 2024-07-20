@@ -25,23 +25,17 @@ class _BodyNotiState extends State<BodyNoti> {
       builder: (AppController appController) {
         return appController.positions.isEmpty
             ? const SizedBox()
-            : FutureBuilder(
-                future: AppService().readInsx(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GoogleMap(
-                      initialCameraPosition: CameraPosition(
+            : appController.insxModels.isEmpty
+                ? const Center(
+                    child: Text(
+                    'ไม่มีงาน',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ))
+                : GoogleMap(
+                    initialCameraPosition: CameraPosition(
                         target: LatLng(appController.positions.last.latitude,
-                            appController.positions.last.longitude),
-                        zoom: 16,
-                      ),
-                      myLocationEnabled: true,
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              );
+                            appController.positions.last.longitude), zoom: 16),
+                  );
       },
     );
   }
