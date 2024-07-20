@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_service.dart';
+import 'package:sinoproject/widgets/bottom_sheet_map.dart';
 
 class BodyNoti extends StatefulWidget {
   const BodyNoti({super.key});
@@ -41,11 +42,21 @@ class _BodyNotiState extends State<BodyNoti> {
     for (var element in appController.insxModels) {
       MarkerId markerId = MarkerId(element.id);
       Marker marker = Marker(
-          markerId: markerId,
-          position: LatLng(double.parse(element.lat.trim()),
-              double.parse(element.lng.trim())),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              AppService().findColorHue(notiDate: element.noti_date)));
+        markerId: markerId,
+        position: LatLng(
+            double.parse(element.lat.trim()), double.parse(element.lng.trim())),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+            AppService().findColorHue(notiDate: element.noti_date)),
+        infoWindow: InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: 'snippet'),
+        onTap: () {
+          print('##21july you tap');
+
+          Get.bottomSheet(
+             BottomSheetMap(insxModel: element,),
+            isScrollControlled: true,
+          );
+        },
+      );
 
       mapMarker[markerId] = marker;
     }

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,52 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/models/user_model.dart';
 import 'package:sinoproject/states/main_home.dart';
+import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_dialog.dart';
 import 'package:sinoproject/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  Future<void> processConfirmOver150(
+      {required String invoiceNo, required double distanceMeter}) async {
+    String distance2digi = convertNumberTwoDigi(number: distanceMeter);
+
+    String urlAPI =
+        '${AppConstant.domain}/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=$invoiceNo&distance=$distance2digi';
+
+    await Dio().get(urlAPI);
+  }
+
+  String convertNumberTwoDigi({required double number}) {
+    NumberFormat numberFormat = NumberFormat('##0.00', 'en_US');
+
+    String numberString = numberFormat.format(number);
+    return numberString;
+  }
+
+  double calculateDistance({
+    required double lat1,
+    required double lng1,
+    required double lat2,
+    required double lng2,
+  }) {
+    double distance = 0;
+
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
+    distance = 12742 * asin(sqrt(a));
+
+    return distance;
+  }
 
   double findColorHue({required String notiDate}) {
     double colorHue = 120.0;
@@ -60,27 +98,27 @@ class AppService {
     return colorHue;
   }
 
-  Future<List<InsxModel>> readInsx() async {
-    var insxModels = <InsxModel>[];
-
+  Future<void> readInsx() async {
     var mapUser = await GetStorage().read('mapUserModel');
     UserModel userModel = UserModel.fromMap(mapUser);
 
     String urlAPI =
-        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
+        '${AppConstant.domain}/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
 
     var result = await Dio().get(urlAPI);
 
     if (result.toString() != 'null') {
+      if (appController.insxModels.isNotEmpty) {
+        appController.insxModels.clear();
+      }
+
       for (var element in json.decode(result.data)) {
         // print('element ---> $element');
 
         InsxModel model = InsxModel.fromMap(element);
-        insxModels.add(model);
+        appController.insxModels.add(model);
       }
     }
-
-    return insxModels;
   }
 
   Future<void> processFindPosition() async {
@@ -141,7 +179,7 @@ class AppService {
     print('user => $user, password = > $password');
 
     String urlAPI =
-        'https://www.pea23.com/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
+        '${AppConstant.domain}/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
 
     await Dio().get(urlAPI).then(
       (value) async {

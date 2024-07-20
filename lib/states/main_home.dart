@@ -50,20 +50,14 @@ class _MainHomeState extends State<MainHome> {
     super.initState();
 
     AppService().processFindPosition();
-    createInsxModels();
+
+    AppService().readInsx();
+
     createItems();
+    
   }
 
-  Future<void> createInsxModels() async {
-    var insxModels = <InsxModel>[];
-    insxModels = await AppService().readInsx();
-
-    if (insxModels.isNotEmpty) {
-      for (var element in insxModels) {
-        appController.insxModels.add(element);
-      }
-    }
-  }
+  
 
   void createItems() {
     for (var i = 0; i < titles.length; i++) {
@@ -90,6 +84,11 @@ class _MainHomeState extends State<MainHome> {
             child: Column(
               children: [
                 DrawerHeader(child: Text('data')),
+                WidgetMenu(
+                  title: 'Set Domain Server',
+                  iconData: Icons.storage,
+                  onTap: () {},
+                ),
                 const Spacer(),
                 WidgetMenu(
                   title: 'Sign Out',
