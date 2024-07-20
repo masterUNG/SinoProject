@@ -31,12 +31,31 @@ class _BodyNotiState extends State<BodyNoti> {
                     'ไม่มีงาน',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ))
-                : GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                        target: LatLng(appController.positions.last.latitude,
-                            appController.positions.last.longitude), zoom: 16),
-                  );
+                : displayMap(appController);
       },
+    );
+  }
+
+  GoogleMap displayMap(AppController appController) {
+    Map<MarkerId, Marker> mapMarker = {};
+    for (var element in appController.insxModels) {
+      MarkerId markerId = MarkerId(element.id);
+      Marker marker = Marker(
+          markerId: markerId,
+          position: LatLng(double.parse(element.lat.trim()),
+              double.parse(element.lng.trim())));
+
+      mapMarker[markerId] = marker;
+    }
+
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+          // target: LatLng(appController.positions.last.latitude,
+          //     appController.positions.last.longitude),
+          target: LatLng(double.parse(appController.insxModels.last.lat.trim()), double.parse(appController.insxModels.last.lng.trim())),
+          zoom: 12),
+      myLocationEnabled: true,
+      markers: Set<Marker>.of(mapMarker.values),
     );
   }
 }
