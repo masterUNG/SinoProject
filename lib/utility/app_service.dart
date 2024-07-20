@@ -19,6 +19,47 @@ import 'package:sinoproject/widgets/widget_button.dart';
 class AppService {
   AppController appController = Get.put(AppController());
 
+  double findColorHue({required String notiDate}) {
+    double colorHue = 120.0;
+
+    var strings = <String>[];
+    strings = notiDate.split(' ');
+    if (strings.isNotEmpty) {
+      // print('##20july strint[0] ---> ${strings[0]}');
+
+      var notiDates = <String>[];
+      notiDates = strings[0].split('-');
+
+      DateTime notiDateTime = DateTime(
+        int.parse(notiDates[0]),
+        int.parse(notiDates[1]),
+        int.parse(notiDates[2]),
+      );
+
+      print('##20july notiDateTime ---> $notiDateTime');
+
+      DateTime currentDateTime = DateTime.now();
+
+      var diff = currentDateTime.difference(notiDateTime);
+
+      int differanceDay = diff.inDays + 1;
+
+      print('##20july differanceDay ---> $differanceDay');
+
+      if (differanceDay >= 7) {
+        colorHue = 360.0;
+      } else if (differanceDay >= 4) {
+        colorHue = 240.0;
+      } else if (differanceDay >= 2) {
+        colorHue = 60.0;
+      } else {
+        colorHue = 120.0;
+      }
+    }
+
+    return colorHue;
+  }
+
   Future<List<InsxModel>> readInsx() async {
     var insxModels = <InsxModel>[];
 

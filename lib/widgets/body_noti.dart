@@ -43,7 +43,9 @@ class _BodyNotiState extends State<BodyNoti> {
       Marker marker = Marker(
           markerId: markerId,
           position: LatLng(double.parse(element.lat.trim()),
-              double.parse(element.lng.trim())));
+              double.parse(element.lng.trim())),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              AppService().findColorHue(notiDate: element.noti_date)));
 
       mapMarker[markerId] = marker;
     }
