@@ -50,12 +50,19 @@ class _BodyNotiState extends State<BodyNoti> {
 
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-          // target: LatLng(appController.positions.last.latitude,
-          //     appController.positions.last.longitude),
-          target: LatLng(double.parse(appController.insxModels.last.lat.trim()), double.parse(appController.insxModels.last.lng.trim())),
-          zoom: 12),
+          target: appController.latlngMoves.isEmpty
+              ? LatLng(appController.positions.last.latitude,
+                  appController.positions.last.longitude)
+              : LatLng(appController.latlngMoves.last.latitude,
+                  appController.latlngMoves.last.longitude),
+          zoom: appController.zoomMoves.last),
       myLocationEnabled: true,
       markers: Set<Marker>.of(mapMarker.values),
+      onCameraMove: (position) {
+        appController.latlngMoves
+            .add(LatLng(position.target.latitude, position.target.longitude));
+        appController.zoomMoves.add(position.zoom);
+      },
     );
   }
 }
