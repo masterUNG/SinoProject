@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sinoproject/utility/app_controller.dart';
@@ -32,8 +33,44 @@ class _BodyNotiState extends State<BodyNoti> {
                     'ไม่มีงาน',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ))
-                : displayMap(appController);
+                : SizedBox(
+                    width: Get.width,
+                    height: Get.height,
+                    child: Stack(
+                      children: [
+                        displayMap(appController),
+                        Column(
+                          children: [
+                            cardPindrop(),
+                            cardPindrop(),
+                            cardPindrop(),
+                            cardPindrop(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
       },
+    );
+  }
+
+  Container cardPindrop({Color? color}) {
+    return Container(
+      margin: const EdgeInsets.only(top: 8, left: 16),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(8)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+           Icon(
+            Icons.pin_drop, color: color,
+            size: 36,
+          ),
+          Text('xx')
+        ],
+      ),
     );
   }
 
@@ -47,12 +84,15 @@ class _BodyNotiState extends State<BodyNoti> {
             double.parse(element.lat.trim()), double.parse(element.lng.trim())),
         icon: BitmapDescriptor.defaultMarkerWithHue(
             AppService().findColorHue(notiDate: element.noti_date)),
-        infoWindow: InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: 'snippet'),
+        infoWindow:
+            InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: 'snippet'),
         onTap: () {
           print('##21july you tap');
 
           Get.bottomSheet(
-             BottomSheetMap(insxModel: element,),
+            BottomSheetMap(
+              insxModel: element,
+            ),
             isScrollControlled: true,
           );
         },
