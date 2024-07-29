@@ -44,8 +44,8 @@ if (flutterVersionName == null) {
         applicationId = "com.masterung.sinoproject"
         minSdk = 24
         targetSdk = 34
-        versionCode = 45
-        versionName = '1.45'
+        versionCode = 47
+        versionName = '1.47'
     }
 
            signingConfigs {
