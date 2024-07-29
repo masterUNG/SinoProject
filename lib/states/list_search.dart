@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_debouncer.dart';
+import 'package:sinoproject/utility/app_service.dart';
 import 'package:sinoproject/widgets/widget_form.dart';
 
 class ListSearch extends StatefulWidget {
@@ -48,7 +49,8 @@ class _ListSearchState extends State<ListSearch> {
           appBar: AppBar(
             title: Text('ข้อมูล ${appController.insxModels.length} รายการ'),
           ),
-          body: GestureDetector(onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          body: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: ListView(
               children: [
                 WidgetForm(
@@ -58,7 +60,7 @@ class _ListSearchState extends State<ListSearch> {
                   onChanged: (p0) {
                     appDebouncer.run(() {
                       processAddAll();
-            
+
                       resultSearchs = resultSearchs
                           .where(
                             (element) => element.cus_name
@@ -66,7 +68,7 @@ class _ListSearchState extends State<ListSearch> {
                                 .contains(p0.toLowerCase()),
                           )
                           .toList();
-            
+
                       setState(() {});
                     });
                   },
@@ -75,8 +77,22 @@ class _ListSearchState extends State<ListSearch> {
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
                   itemCount: resultSearchs.length,
-                  itemBuilder: (context, index) =>
+                  itemBuilder: (context, index) => Row(
+                    children: [
+                      FutureBuilder(
+                        future: AppService().findWidgetPindrop(
+                            notiDate: resultSearchs[index].noti_date),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return snapshot.data!;
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
                       Text(resultSearchs[index].cus_name),
+                    ],
+                  ),
                 ),
               ],
             ),

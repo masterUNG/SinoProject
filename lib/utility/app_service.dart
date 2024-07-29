@@ -99,6 +99,54 @@ class AppService {
     return colorHue;
   }
 
+  Future<Widget> findWidgetPindrop({required String notiDate}) async {
+    // double colorHue = 120.0;
+
+    Color color = AppConstant.colorHue120;
+
+    var strings = <String>[];
+    strings = notiDate.split(' ');
+    if (strings.isNotEmpty) {
+      // print('##20july strint[0] ---> ${strings[0]}');
+
+      var notiDates = <String>[];
+      notiDates = strings[0].split('-');
+
+      DateTime notiDateTime = DateTime(
+        int.parse(notiDates[0]),
+        int.parse(notiDates[1]),
+        int.parse(notiDates[2]),
+      );
+
+      print('##20july notiDateTime ---> $notiDateTime');
+
+      DateTime currentDateTime = DateTime.now();
+
+      var diff = currentDateTime.difference(notiDateTime);
+
+      int differanceDay = diff.inDays + 1;
+
+      print('##20july differanceDay ---> $differanceDay');
+
+      if (differanceDay >= 7) {
+        // colorHue = 355.0;
+        color = AppConstant.colorHue355;
+      } else if (differanceDay >= 4) {
+        // colorHue = 240.0;
+        color = AppConstant.colorHue240;
+      } else if (differanceDay >= 2) {
+        // colorHue = 60.0;
+        color = AppConstant.colorHue60;
+      } else {
+        // colorHue = 120.0;
+        color = AppConstant.colorHue120;
+      }
+    }
+
+    // return 120.0;
+    return Icon(Icons.pin_drop, color: color,);
+  }
+
   Future<void> readInsx() async {
     var mapUser = await GetStorage().read('mapUserModel');
     UserModel userModel = UserModel.fromMap(mapUser);
@@ -109,7 +157,6 @@ class AppService {
     var result = await Dio().get(urlAPI);
 
     if (result.toString() != 'null') {
-
       if (appController.insxModels.isNotEmpty) {
         appController.insxModels.clear();
         appController.insxHue355Models.clear();
