@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sinoproject/models/insx_model.dart';
+import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_debouncer.dart';
 import 'package:sinoproject/utility/app_service.dart';
@@ -77,21 +79,31 @@ class _ListSearchState extends State<ListSearch> {
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
                   itemCount: resultSearchs.length,
-                  itemBuilder: (context, index) => Row(
-                    children: [
-                      FutureBuilder(
-                        future: AppService().findWidgetPindrop(
-                            notiDate: resultSearchs[index].noti_date),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return snapshot.data!;
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      Get.back(result: resultSearchs[index]);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: AppConstant().curbeBox(color: Colors.black),
+                      child: Row(
+                        children: [
+                          FutureBuilder(
+                            future: AppService().findWidgetPindrop(
+                                notiDate: resultSearchs[index].noti_date),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return snapshot.data!;
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ),
+                          Text(resultSearchs[index].cus_name),
+                        ],
                       ),
-                      Text(resultSearchs[index].cus_name),
-                    ],
+                    ),
                   ),
                 ),
               ],

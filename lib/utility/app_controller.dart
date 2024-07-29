@@ -7,8 +7,10 @@ class AppController extends GetxController {
   RxBool redEye = true.obs;
   RxInt indexBody = 0.obs;
   RxList<Position> positions = <Position>[].obs;
+
   RxList<LatLng> latlngMoves = <LatLng>[].obs;
   RxList<double> zoomMoves = <double>[12.0].obs;
+  
   RxList<InsxModel> insxModels = <InsxModel>[].obs;
 
   RxList<InsxModel> insxHue355Models = <InsxModel>[].obs;

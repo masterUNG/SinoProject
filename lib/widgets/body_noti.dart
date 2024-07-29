@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/states/list_search.dart';
 import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
@@ -16,6 +17,8 @@ class BodyNoti extends StatefulWidget {
 }
 
 class _BodyNotiState extends State<BodyNoti> {
+  GoogleMapController? googleMapController;
+
   @override
   void initState() {
     super.initState();
@@ -45,23 +48,43 @@ class _BodyNotiState extends State<BodyNoti> {
                           children: [
                             cardPindrop(
                               color: Colors.white,
-                              icon: Icons.search, amount: appController.insxModels.length,
+                              icon: Icons.search,
+                              amount: appController.insxModels.length,
                               onTap: () {
-                                Get.to(const ListSearch());
+                                Get.to(const ListSearch())?.then(
+                                  (value) {
+                                    if (value != null) {
+                                      InsxModel model = value;
+
+                                      googleMapController!.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                                  target: LatLng(
+                                                    double.parse(model.lat),
+                                                    double.parse(model.lng),
+                                                  ),
+                                                  zoom: appController
+                                                      .zoomMoves.last)));
+
+                                      googleMapController!
+                                          .showMarkerInfoWindow(MarkerId(model.id));
+                                    }
+                                  },
+                                );
                               },
                             ),
                             cardPindrop(
-                              color: AppConstant.colorHue120,amount: appController.insxHue120Models.length
-                            ),
+                                color: AppConstant.colorHue120,
+                                amount: appController.insxHue120Models.length),
                             cardPindrop(
-                              color: AppConstant.colorHue60,amount: appController.insxHue60Models.length
-                            ),
+                                color: AppConstant.colorHue60,
+                                amount: appController.insxHue60Models.length),
                             cardPindrop(
-                              color: AppConstant.colorHue240,amount: appController.insxHue240Models.length
-                            ),
+                                color: AppConstant.colorHue240,
+                                amount: appController.insxHue240Models.length),
                             cardPindrop(
-                              color: AppConstant.colorHue355,amount: appController.insxHue355Models.length
-                            ),
+                                color: AppConstant.colorHue355,
+                                amount: appController.insxHue355Models.length),
                           ],
                         ),
                       ],
@@ -78,7 +101,8 @@ class _BodyNotiState extends State<BodyNoti> {
     required int amount,
     Function()? onTap,
   }) {
-    return InkWell(onTap: onTap,
+    return InkWell(
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(top: 8, left: 16),
         padding: const EdgeInsets.all(4),
@@ -107,6 +131,7 @@ class _BodyNotiState extends State<BodyNoti> {
     Map<MarkerId, Marker> mapMarker = {};
     for (var element in appController.insxModels) {
       MarkerId markerId = MarkerId(element.id);
+
       Marker marker = Marker(
         markerId: markerId,
         position: LatLng(
@@ -114,9 +139,9 @@ class _BodyNotiState extends State<BodyNoti> {
         icon: BitmapDescriptor.defaultMarkerWithHue(
             AppService().findColorHue(notiDate: element.noti_date)),
         infoWindow:
-            InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: 'snippet'),
+            InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: element.cus_name),
         onTap: () {
-          print('##21july you tap');
+          // print('##21july you tap');
 
           Get.bottomSheet(
             BottomSheetMap(
@@ -144,6 +169,9 @@ class _BodyNotiState extends State<BodyNoti> {
         appController.latlngMoves
             .add(LatLng(position.target.latitude, position.target.longitude));
         appController.zoomMoves.add(position.zoom);
+      },
+      onMapCreated: (controller) {
+        googleMapController = controller;
       },
     );
   }

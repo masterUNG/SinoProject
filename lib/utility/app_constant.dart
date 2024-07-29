@@ -11,7 +11,7 @@ class AppConstant {
 
   static Color mainColor = const Color.fromARGB(255, 9, 132, 203);
 
-  BoxDecoration curbeBox() => BoxDecoration(
-      border: Border.all(color: Colors.white),
+  BoxDecoration curbeBox({Color? color}) => BoxDecoration(
+      border: Border.all(color: color ?? Colors.white),
       borderRadius: BorderRadius.circular(8));
 }
