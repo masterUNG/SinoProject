@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:sinoproject/models/insx_model.dart';
 import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
@@ -9,7 +11,12 @@ import 'package:sinoproject/utility/app_service.dart';
 import 'package:sinoproject/widgets/widget_form.dart';
 
 class ListSearch extends StatefulWidget {
-  const ListSearch({super.key});
+  const ListSearch({
+    super.key,
+    required this.insxModels,
+  });
+
+  final List<InsxModel> insxModels;
 
   @override
   State<ListSearch> createState() => _ListSearchState();
@@ -36,7 +43,7 @@ class _ListSearchState extends State<ListSearch> {
       resultSearchs.clear();
     }
 
-    for (var element in controller.insxModels) {
+    for (var element in widget.insxModels) {
       resultSearchs.add(element);
     }
   }

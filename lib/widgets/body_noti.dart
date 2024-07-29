@@ -51,45 +51,84 @@ class _BodyNotiState extends State<BodyNoti> {
                               icon: Icons.search,
                               amount: appController.insxModels.length,
                               onTap: () {
-                                Get.to(const ListSearch())?.then(
-                                  (value) {
-                                    if (value != null) {
-                                      InsxModel model = value;
+                                actionToListSearch(
+                                  appController: appController,
+                                  insxModels: appController.insxModels,
+                                );
+                              },
+                            ),
 
-                                      googleMapController!.animateCamera(
-                                          CameraUpdate.newCameraPosition(
-                                              CameraPosition(
-                                                  target: LatLng(
-                                                    double.parse(model.lat),
-                                                    double.parse(model.lng),
-                                                  ),
-                                                  zoom: appController
-                                                      .zoomMoves.last)));
 
-                                      googleMapController!
-                                          .showMarkerInfoWindow(MarkerId(model.id));
-                                    }
-                                  },
+                            cardPindrop(
+                              color: AppConstant.colorHue120,
+                              amount: appController.insxHue120Models.length,
+                              onTap: () {
+                                actionToListSearch(
+                                  appController: appController,
+                                  insxModels: appController.insxHue120Models,
+                                );
+                              },
+                            ),
+
+
+                            cardPindrop(
+                              color: AppConstant.colorHue60,
+                              amount: appController.insxHue60Models.length,
+                              onTap: () {
+                                actionToListSearch(
+                                  appController: appController,
+                                  insxModels: appController.insxHue60Models,
                                 );
                               },
                             ),
                             cardPindrop(
-                                color: AppConstant.colorHue120,
-                                amount: appController.insxHue120Models.length),
+                              color: AppConstant.colorHue240,
+                              amount: appController.insxHue240Models.length,
+                              onTap: () {
+                                actionToListSearch(
+                                  appController: appController,
+                                  insxModels: appController.insxHue240Models,
+                                );
+                              },
+                            ),
                             cardPindrop(
-                                color: AppConstant.colorHue60,
-                                amount: appController.insxHue60Models.length),
-                            cardPindrop(
-                                color: AppConstant.colorHue240,
-                                amount: appController.insxHue240Models.length),
-                            cardPindrop(
-                                color: AppConstant.colorHue355,
-                                amount: appController.insxHue355Models.length),
+                              color: AppConstant.colorHue355,
+                              amount: appController.insxHue355Models.length,
+                              onTap: () {
+                                actionToListSearch(
+                                  appController: appController,
+                                  insxModels: appController.insxHue355Models,
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ],
                     ),
                   );
+      },
+    );
+  }
+
+  void actionToListSearch({
+    required AppController appController,
+    required List<InsxModel> insxModels,
+  }) {
+    Get.to(ListSearch(insxModels: insxModels))?.then(
+      (value) {
+        if (value != null) {
+          InsxModel model = value;
+
+          googleMapController!
+              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                  target: LatLng(
+                    double.parse(model.lat),
+                    double.parse(model.lng),
+                  ),
+                  zoom: appController.zoomMoves.last)));
+
+          googleMapController!.showMarkerInfoWindow(MarkerId(model.id));
+        }
       },
     );
   }
@@ -138,8 +177,8 @@ class _BodyNotiState extends State<BodyNoti> {
             double.parse(element.lat.trim()), double.parse(element.lng.trim())),
         icon: BitmapDescriptor.defaultMarkerWithHue(
             AppService().findColorHue(notiDate: element.noti_date)),
-        infoWindow:
-            InfoWindow(title: 'pea_no : ${element.pea_no}', snippet: element.cus_name),
+        infoWindow: InfoWindow(
+            title: 'pea_no : ${element.pea_no}', snippet: element.cus_name),
         onTap: () {
           // print('##21july you tap');
 
