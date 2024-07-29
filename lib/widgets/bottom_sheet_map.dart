@@ -49,57 +49,63 @@ class _BottomSheetMapState extends State<BottomSheetMap> {
         padding: const EdgeInsets.all(8),
         width: Get.width,
         decoration: BoxDecoration(color: Colors.black.withOpacity(0.5)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            WidgetTextRich(head: 'ca : ', value: widget.insxModel.ca),
-            WidgetTextRich(
-                head: 'cus_name : ', value: widget.insxModel.cus_name),
-            WidgetTextRich(head: 'pea_no : ', value: widget.insxModel.pea_no),
-            Container(
-              padding: const EdgeInsets.all(4),
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              decoration: AppConstant().curbeBox(),
-              child: WidgetTextRich(
-                  head: 'ระยะห่าง : ',
-                  value:
-                      '${AppService().convertNumberTwoDigi(number: distanceMeter!)} m'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WidgetButton(
-                  text: 'บันทึกข้อมูล',
-                  onPressed: () {
-                    if (distanceMeter! >= 150.0) {
-                      // Over 150
-
-                      AppDialog().normalDialog(
-                          title: 'เกิน 150 เมตร',
-                          contentWidget: Text('เงื่อนไขในการทำ'),
-                          firstWidget: WidgetButton(
-                            text: 'ยืนยัน',
-                            onPressed: () {
-                              Get.back();
-                              AppService()
-                                  .processConfirmOver150(
-                                      invoiceNo: widget.insxModel.invoice_no,
-                                      distanceMeter: distanceMeter!)
-                                  .then(
-                                (value) {
-                                  Get.back();
-                                  AppService().readInsx();
-                                },
-                              );
-                            },
-                            type: GFButtonType.outline2x,
-                          ));
-                    } else {}
-                  },
+                WidgetTextRich(head: 'ca : ', value: widget.insxModel.ca),
+                WidgetTextRich(
+                    head: 'cus_name : ', value: widget.insxModel.cus_name),
+                WidgetTextRich(
+                    head: 'pea_no : ', value: widget.insxModel.pea_no),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  decoration: AppConstant().curbeBox(),
+                  child: WidgetTextRich(
+                      head: 'ระยะห่าง : ',
+                      value:
+                          '${AppService().convertNumberTwoDigi(number: distanceMeter!)} m'),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    WidgetButton(
+                      text: 'บันทึกข้อมูล',
+                      onPressed: () {
+                        if (distanceMeter! >= 150.0) {
+                          // Over 150
+
+                          AppDialog().normalDialog(
+                              title: 'เกิน 150 เมตร',
+                              contentWidget: Text('เงื่อนไขในการทำ'),
+                              firstWidget: WidgetButton(
+                                text: 'ยืนยัน',
+                                onPressed: () {
+                                  Get.back();
+                                  AppService()
+                                      .processConfirmOver150(
+                                          invoiceNo:
+                                              widget.insxModel.invoice_no,
+                                          distanceMeter: distanceMeter!)
+                                      .then(
+                                    (value) {
+                                      Get.back();
+                                      AppService().readInsx();
+                                    },
+                                  );
+                                },
+                                type: GFButtonType.outline2x,
+                              ));
+                        } else {}
+                      },
+                    ),
+                  ],
+                )
               ],
-            )
+            ),
           ],
         ),
       ),
