@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_service.dart';
 import 'package:sinoproject/widgets/bottom_sheet_map.dart';
@@ -41,10 +42,22 @@ class _BodyNotiState extends State<BodyNoti> {
                         displayMap(appController),
                         Column(
                           children: [
-                            cardPindrop(),
-                            cardPindrop(),
-                            cardPindrop(),
-                            cardPindrop(),
+                            cardPindrop(
+                              color: Colors.white,
+                              icon: Icons.search, amount: appController.insxModels.length
+                            ),
+                            cardPindrop(
+                              color: AppConstant.colorHue120,amount: appController.insxHue120Models.length
+                            ),
+                            cardPindrop(
+                              color: AppConstant.colorHue60,amount: appController.insxHue60Models.length
+                            ),
+                            cardPindrop(
+                              color: AppConstant.colorHue240,amount: appController.insxHue240Models.length
+                            ),
+                            cardPindrop(
+                              color: AppConstant.colorHue355,amount: appController.insxHue355Models.length
+                            ),
                           ],
                         ),
                       ],
@@ -54,21 +67,30 @@ class _BodyNotiState extends State<BodyNoti> {
     );
   }
 
-  Container cardPindrop({Color? color}) {
+  Container cardPindrop({
+    Color? color,
+    Color? bgColor,
+    IconData? icon,
+    required int amount,
+  }) {
     return Container(
       margin: const EdgeInsets.only(top: 8, left: 16),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
+          color: bgColor ?? Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.circular(8)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Icon(
-            Icons.pin_drop, color: color,
+          Icon(
+            icon ?? Icons.pin_drop,
+            color: color,
             size: 36,
           ),
-          Text('xx')
+          Text(
+            amount.toString(),
+            style: TextStyle(color: Colors.white),
+          )
         ],
       ),
     );

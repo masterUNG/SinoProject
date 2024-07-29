@@ -85,7 +85,7 @@ class AppService {
       print('##20july differanceDay ---> $differanceDay');
 
       if (differanceDay >= 7) {
-        colorHue = 360.0;
+        colorHue = 355.0;
       } else if (differanceDay >= 4) {
         colorHue = 240.0;
       } else if (differanceDay >= 2) {
@@ -109,8 +109,13 @@ class AppService {
     var result = await Dio().get(urlAPI);
 
     if (result.toString() != 'null') {
+
       if (appController.insxModels.isNotEmpty) {
         appController.insxModels.clear();
+        appController.insxHue355Models.clear();
+        appController.insxHue240Models.clear();
+        appController.insxHue120Models.clear();
+        appController.insxHue60Models.clear();
       }
 
       for (var element in json.decode(result.data)) {
@@ -118,6 +123,45 @@ class AppService {
 
         InsxModel model = InsxModel.fromMap(element);
         appController.insxModels.add(model);
+
+        var strings = <String>[];
+        strings = model.noti_date.split(' ');
+        if (strings.isNotEmpty) {
+          // print('##20july strint[0] ---> ${strings[0]}');
+
+          var notiDates = <String>[];
+          notiDates = strings[0].split('-');
+
+          DateTime notiDateTime = DateTime(
+            int.parse(notiDates[0]),
+            int.parse(notiDates[1]),
+            int.parse(notiDates[2]),
+          );
+
+          print('##20july notiDateTime ---> $notiDateTime');
+
+          DateTime currentDateTime = DateTime.now();
+
+          var diff = currentDateTime.difference(notiDateTime);
+
+          int differanceDay = diff.inDays + 1;
+
+          print('##20july differanceDay ---> $differanceDay');
+
+          if (differanceDay >= 7) {
+            // colorHue = 355.0;
+            appController.insxHue355Models.add(model);
+          } else if (differanceDay >= 4) {
+            // colorHue = 240.0;
+            appController.insxHue240Models.add(model);
+          } else if (differanceDay >= 2) {
+            // colorHue = 60.0;
+            appController.insxHue60Models.add(model);
+          } else {
+            // colorHue = 120.0;
+            appController.insxHue120Models.add(model);
+          }
+        }
       }
     }
   }
