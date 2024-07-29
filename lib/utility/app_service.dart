@@ -22,6 +22,27 @@ import 'package:sinoproject/widgets/widget_button.dart';
 class AppService {
   AppController appController = Get.put(AppController());
 
+  Future<void> readInsxHistory() async {
+    var mapUser = await GetStorage().read('mapUserModel');
+    UserModel userModel = UserModel.fromMap(mapUser);
+
+    String urlAPI =
+        '${AppConstant.domain}/apipsinsx/getInsxWhereUserHis.php?isAdd=true&worker_name=${userModel.staffname}';
+
+    var result = await Dio().get(urlAPI);
+
+    if (result.toString() != 'null') {
+      if (appController.insxHistoryModels.isNotEmpty) {
+        appController.insxHistoryModels.clear();
+      }
+
+      for (var element in json.decode(result.data)) {
+        InsxModel model = InsxModel.fromMap(element);
+        appController.insxHistoryModels.add(model);
+      }
+    }
+  }
+
   Future<void> processConfirmOver150(
       {required String invoiceNo, required double distanceMeter}) async {
     String distance2digi = convertNumberTwoDigi(number: distanceMeter);
@@ -144,7 +165,10 @@ class AppService {
     }
 
     // return 120.0;
-    return Icon(Icons.pin_drop, color: color,);
+    return Icon(
+      Icons.pin_drop,
+      color: color,
+    );
   }
 
   Future<void> readInsx() async {

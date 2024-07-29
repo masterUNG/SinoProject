@@ -12,6 +12,7 @@ class AppController extends GetxController {
   RxList<double> zoomMoves = <double>[12.0].obs;
   
   RxList<InsxModel> insxModels = <InsxModel>[].obs;
+  RxList<InsxModel> insxHistoryModels = <InsxModel>[].obs;
 
   RxList<InsxModel> insxHue355Models = <InsxModel>[].obs;
   RxList<InsxModel> insxHue240Models = <InsxModel>[].obs;

@@ -6,25 +6,31 @@ class WidgetTextRich extends StatelessWidget {
     Key? key,
     required this.head,
     required this.value,
+    this.colorTextValue,
+    this.colorTextHead,
   }) : super(key: key);
 
   final String head;
   final String value;
+  final Color? colorTextValue;
+  final Color? colorTextHead;
 
   @override
   Widget build(BuildContext context) {
     return Text.rich(
       TextSpan(
           text: head,
-          style: const TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w500, color: Colors.amber),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: colorTextHead ?? Colors.amber),
           children: [
             TextSpan(
               text: value,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
-                  color: Colors.white),
+                  color: colorTextValue ?? Colors.white),
             ),
           ]),
     );

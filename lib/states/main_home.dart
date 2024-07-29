@@ -54,10 +54,7 @@ class _MainHomeState extends State<MainHome> {
     AppService().readInsx();
 
     createItems();
-    
   }
-
-  
 
   void createItems() {
     for (var i = 0; i < titles.length; i++) {
@@ -78,7 +75,9 @@ class _MainHomeState extends State<MainHome> {
       builder: (AppController appController) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(titles[appController.indexBody.value]),
+            title: Text(appController.indexBody.value == 1
+                ? '${titles[appController.indexBody.value]} ${appController.insxHistoryModels.length} รายการ'
+                : titles[appController.indexBody.value]),
           ),
           drawer: Drawer(
             child: Column(
