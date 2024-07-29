@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sinoproject/states/list_search.dart';
 import 'package:sinoproject/utility/app_constant.dart';
 import 'package:sinoproject/utility/app_controller.dart';
 import 'package:sinoproject/utility/app_service.dart';
@@ -44,7 +45,10 @@ class _BodyNotiState extends State<BodyNoti> {
                           children: [
                             cardPindrop(
                               color: Colors.white,
-                              icon: Icons.search, amount: appController.insxModels.length
+                              icon: Icons.search, amount: appController.insxModels.length,
+                              onTap: () {
+                                Get.to(const ListSearch());
+                              },
                             ),
                             cardPindrop(
                               color: AppConstant.colorHue120,amount: appController.insxHue120Models.length
@@ -67,31 +71,34 @@ class _BodyNotiState extends State<BodyNoti> {
     );
   }
 
-  Container cardPindrop({
+  Widget cardPindrop({
     Color? color,
     Color? bgColor,
     IconData? icon,
     required int amount,
+    Function()? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(top: 8, left: 16),
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-          color: bgColor ?? Colors.black.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(8)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon ?? Icons.pin_drop,
-            color: color,
-            size: 36,
-          ),
-          Text(
-            amount.toString(),
-            style: TextStyle(color: Colors.white),
-          )
-        ],
+    return InkWell(onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(top: 8, left: 16),
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+            color: bgColor ?? Colors.black.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(8)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon ?? Icons.pin_drop,
+              color: color,
+              size: 36,
+            ),
+            Text(
+              amount.toString(),
+              style: TextStyle(color: Colors.white),
+            )
+          ],
+        ),
       ),
     );
   }

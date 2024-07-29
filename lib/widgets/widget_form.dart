@@ -9,6 +9,7 @@ class WidgetForm extends StatelessWidget {
     this.obscureText,
     this.validator,
     this.controller,
+    this.onChanged,
   }) : super(key: key);
 
   final String? hintText;
@@ -16,10 +17,12 @@ class WidgetForm extends StatelessWidget {
   final bool? obscureText;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
       controller: controller,
       validator: validator,
       obscureText: obscureText ?? false,
