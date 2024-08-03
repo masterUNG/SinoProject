@@ -48,7 +48,7 @@ class AppService {
     String distance2digi = convertNumberTwoDigi(number: distanceMeter);
 
     String urlAPI =
-        '${AppConstant.domain}/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=$invoiceNo&distance=$distance2digi';
+        '${AppConstant.domain}/apipsinsx/ .php?isAdd=true&invoice_no=$invoiceNo&distance=$distance2digi';
 
     await Dio().get(urlAPI);
   }
@@ -175,19 +175,27 @@ class AppService {
     var mapUser = await GetStorage().read('mapUserModel');
     UserModel userModel = UserModel.fromMap(mapUser);
 
+    // String urlAPI =
+    //     '${AppConstant.domain}/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
     String urlAPI =
-        '${AppConstant.domain}/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
+        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=${userModel.staffname}';
+
+    print('## urlAPI --> $urlAPI');
 
     var result = await Dio().get(urlAPI);
 
-    if (result.toString() != 'null') {
-      if (appController.insxModels.isNotEmpty) {
+     if (appController.insxModels.isNotEmpty) {
         appController.insxModels.clear();
         appController.insxHue355Models.clear();
         appController.insxHue240Models.clear();
         appController.insxHue120Models.clear();
         appController.insxHue60Models.clear();
       }
+
+    if (result.toString() != 'null') {
+
+
+     
 
       for (var element in json.decode(result.data)) {
         // print('element ---> $element');
@@ -295,7 +303,7 @@ class AppService {
     print('user => $user, password = > $password');
 
     String urlAPI =
-        '${AppConstant.domain}/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
+        '${AppConstant.domain}/getUserWhereUserSinghto.php?isAdd=true&username=$user';
 
     await Dio().get(urlAPI).then(
       (value) async {

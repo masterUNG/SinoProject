@@ -6,7 +6,7 @@ class AppConstant {
   static Color colorHue120 = const Color.fromARGB(255, 3, 198, 36);
   static Color colorHue60 = const Color.fromARGB(255, 225, 236, 12);
 
-  static String domain = 'https://www.pea23.com';
+  static String domain = 'https://www.androidthai.in.th/fluttertraining/sinno';
   // static String domainB = 'https://www.pea23.com';
 
   static Color mainColor = const Color.fromARGB(255, 9, 132, 203);
